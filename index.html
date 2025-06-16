@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <title>noon.pi - متجر إكسسوارات</title>
+  <meta charset="UTF-8" />
+  <title>noon.pi - تسجيل الدخول</title>
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <style>
     body {
@@ -22,6 +22,11 @@
       cursor: pointer;
       margin-top: 20px;
     }
+    #user-info {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #222;
+    }
   </style>
 </head>
 <body>
@@ -29,16 +34,19 @@
   <p>اضغط لتسجيل الدخول باستخدام Pi</p>
   <button onclick="loginWithPi()">تسجيل الدخول</button>
 
+  <div id="user-info"></div>
+
   <script>
     function loginWithPi() {
       const scopes = ['username', 'payments'];
+
       Pi.init({ version: "2.0" }).then(() => {
         Pi.authenticate(scopes, onSuccess, onFailure);
       });
 
       function onSuccess(auth) {
-        alert("مرحبًا " + auth.user.username + " 🌟");
-        // هنا نقدر نبدأ عملية الدفع مثلًا
+        const username = auth.user.username;
+        document.getElementById("user-info").innerText = "أهلًا بيك يا " + username + " 🌟";
       }
 
       function onFailure(error) {
