@@ -1,27 +1,51 @@
-
 <!DOCTYPE html>
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>noon.pi</title>
+  <title>noon.pi - متجر إكسسوارات</title>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <style>
     body {
       direction: rtl;
       font-family: Arial, sans-serif;
       background-color: #fff8e1;
-      padding: 2rem;
       text-align: center;
+      padding: 2rem;
     }
-    h1 {
-      color: #6c2bd9;
-    }
-    p {
-      color: #444;
+    button {
+      background-color: #6c2bd9;
+      color: white;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
   <h1>مرحبًا بك في noon.pi</h1>
-  <p>منتجات مميزة، ودفع آمن باستخدام Pi Network</p>
+  <p>اضغط لتسجيل الدخول باستخدام Pi</p>
+  <button onclick="loginWithPi()">تسجيل الدخول</button>
+
+  <script>
+    function loginWithPi() {
+      const scopes = ['username', 'payments'];
+      Pi.init({ version: "2.0" }).then(() => {
+        Pi.authenticate(scopes, onSuccess, onFailure);
+      });
+
+      function onSuccess(auth) {
+        alert("مرحبًا " + auth.user.username + " 🌟");
+        // هنا نقدر نبدأ عملية الدفع مثلًا
+      }
+
+      function onFailure(error) {
+        alert("فشل تسجيل الدخول 😥");
+        console.error(error);
+      }
+    }
+  </script>
 </body>
 </html>
