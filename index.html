@@ -4,92 +4,129 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>جراب موبايل - noon.pi</title>
+  <title>noonbot - متجر Pi</title>
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <style>
-    body {margin: 0; font-family: Arial, sans-serif; background: linear-gradient(to bottom right, #fff8e1, #ffe0b2); color: #333; direction: rtl;}
-    header {background-color: #ffdc00; padding: 1rem; display: flex; justify-content: space-between; align-items: center;}
-    header img {height: 40px;}
-    header input {width: 40%; padding: 0.5rem; border-radius: 10px; border: none;}
-    header select, header button {margin-left: 10px; padding: 0.5rem;}
-    #usernameDisplay {margin-right: 1rem; font-weight: bold;}
-    .container {max-width: 900px; margin: 2rem auto; background: #fff; border-radius: 15px; padding: 1.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-wrap: wrap; gap: 2rem;}
-    .product-image {flex: 1; min-width: 250px;}
-    .product-image img {width: 100%; border-radius: 10px;}
-    .product-details {flex: 2;}
-    .product-details h1 {margin-bottom: 1rem; color: #6c2bd9;}
-    .price {color: #f75d59; font-size: 1.4rem; font-weight: bold; margin-bottom: 1rem;}
-    .product-details p {font-size: 1rem; margin-bottom: 1.5rem;}
-    button {background-color: #6c2bd9; color: #fff; padding: 0.8rem 1.5rem; border: none; border-radius: 25px; cursor: pointer; font-size: 1rem;}
-    .auth-box {max-width: 400px; margin: 1rem auto; background: #fff3cd; padding: 1rem; border-radius: 10px; box-shadow: 0 0 5px rgba(0,0,0,0.1);}
-    .auth-box input {width: 100%; margin-bottom: 0.5rem; padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc;}
+    body { margin: 0; font-family: Arial, sans-serif; background: #fff8e1; color: #333; direction: rtl; }
+    header { background-color: #ffdc00; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+    header input { width: 40%; padding: 0.5rem; border-radius: 10px; border: none; }
+    header button, header select { margin-left: 10px; padding: 0.5rem; }
+    #usernameDisplay { margin-right: 1rem; font-weight: bold; }
+    .auth-box, #accountPanel { max-width: 400px; margin: 1rem auto; background: #fff3cd; padding: 1rem; border-radius: 10px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+    .auth-box input { width: 100%; margin-bottom: 0.5rem; padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc; }
+    .container { max-width: 900px; margin: 2rem auto; background: #fff; border-radius: 15px; padding: 1.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-wrap: wrap; gap: 2rem; }
+    .product-image { flex: 1; min-width: 250px; }
+    .product-details { flex: 2; }
+    .product-details img { width: 100%; border-radius: 10px; }
+    .product-details h1 { color: #6c2bd9; }
+    .price { color: #f75d59; font-size: 1.4rem; font-weight: bold; }
+    button { background-color: #6c2bd9; color: #fff; border: none; border-radius: 25px; padding: 0.8rem 1.5rem; cursor: pointer; }
+    #accountPanel { display: none; background: #e3f2fd; }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="noon logo" />
-    <input type="text" placeholder="ابحث..." />
-    <select><option selected>AR</option><option>EN</option></select>
+    <img src="logo.png" alt="noon logo" height="40">
+    <input type="text" placeholder="ابحث...">
+    <select><option>AR</option><option>EN</option></select>
     <button id="loginBtn">دخول Pi</button>
+    <button id="accountBtn">حسابي</button>
     <span id="usernameDisplay"></span>
   </header>
+
   <div class="auth-box">
     <h3>تسجيل حساب جديد</h3>
     <input type="text" id="newUsername" placeholder="اسم المستخدم">
     <input type="password" id="newPassword" placeholder="كلمة السر">
     <button onclick="registerUser()">تسجيل</button>
-    <h3>تسجيل الدخول التقليدي</h3>
+
+    <h3>تسجيل الدخول</h3>
     <input type="text" id="loginUsername" placeholder="اسم المستخدم">
     <input type="password" id="loginPassword" placeholder="كلمة السر">
     <button onclick="loginUser()">دخول</button>
   </div>
+
+  <div id="accountPanel">
+    <h3>معلومات حسابي</h3>
+    <p><strong>الاسم:</strong> <span id="accountName"></span></p>
+    <button onclick="logoutUser()">تسجيل الخروج</button>
+  </div>
+
   <div class="container">
     <div class="product-image"><img src="product.jpg" alt="جراب موبايل"></div>
     <div class="product-details">
       <h1>جراب موبايل سيليكون</h1>
       <div class="price">1 Pi</div>
-      <p>جراب مميز ضد الصدمات والخدوش، تصميم أنيق وخفيف الوزن، خامة سيليكون ممتازة. متوافق مع معظم موديلات الهواتف الذكية، متوفر بألوان متعددة.</p>
+      <p>جراب أنيق وخفيف ضد الصدمات. متوفر بألوان متعددة ومناسب لأغلب الهواتف.</p>
       <button onclick="payWithPi()">اشتري الآن بـ Pi</button>
     </div>
   </div>
+
   <script>
     Pi.init({ version: "2.0" });
+
     async function payWithPi() {
       try {
         const scopes = ['username', 'payments'];
         const user = await Pi.authenticate(scopes, onIncompletePaymentFound);
-        const paymentData = {amount: 1, memo: "شراء جراب موبايل", metadata: { product: "جراب موبايل", buyer: user.username }};
+        const paymentData = {
+          amount: 1,
+          memo: "شراء جراب موبايل",
+          metadata: { product: "جراب موبايل", buyer: user.username },
+        };
         const payment = await Pi.createPayment(paymentData, {
-          onReadyForServerApproval(paymentId) { console.log("Ready for server approval", paymentId); },
-          onReadyForServerCompletion(paymentId, txid) { console.log("Payment completed", txid); alert("تم الدفع بنجاح!"); },
-          onCancel(paymentId) { console.log("Payment cancelled", paymentId); },
-          onError(error, paymentId) { console.error("Payment error", error); },
+          onReadyForServerApproval(paymentId) { console.log("Ready for approval", paymentId); },
+          onReadyForServerCompletion(paymentId, txid) { alert("تم الدفع بنجاح!"); },
+          onCancel(paymentId) { console.log("تم الإلغاء", paymentId); },
+          onError(error, paymentId) { console.error("خطأ بالدفع", error); }
         });
-      } catch (error) { console.error("فشل تسجيل الدخول بمحفظة Pi", error); }
+      } catch (e) { console.error("فشل الدخول بمحفظة Pi", e); }
     }
-    function onIncompletePaymentFound(payment) { console.log("دفعة غير مكتملة تم اكتشافها:", payment); }
+
+    function onIncompletePaymentFound(payment) {
+      console.log("دفعة غير مكتملة:", payment);
+    }
+
     document.getElementById("loginBtn").addEventListener("click", async function () {
       try {
         const scopes = ['username'];
         const user = await Pi.authenticate(scopes);
         document.getElementById("usernameDisplay").innerText = `مرحبًا، ${user.username}`;
         document.getElementById("loginBtn").style.display = "none";
-      } catch (error) { console.error("فشل تسجيل الدخول", error); }
+      } catch (e) {
+        console.error("فشل الدخول", e);
+      }
     });
+
     function registerUser() {
       const username = document.getElementById("newUsername").value;
       const password = document.getElementById("newPassword").value;
-      if (!username || !password) return alert("املأ كل البيانات");
+      if (!username || !password) return alert("املأ البيانات");
       localStorage.setItem(`user_${username}`, password);
-      alert("تم التسجيل بنجاح! يمكنك الآن تسجيل الدخول.");
+      alert("تم التسجيل بنجاح");
     }
+
     function loginUser() {
       const username = document.getElementById("loginUsername").value;
       const password = document.getElementById("loginPassword").value;
-      const storedPass = localStorage.getItem(`user_${username}`);
-      if (storedPass && storedPass === password) {
+      const saved = localStorage.getItem(`user_${username}`);
+      if (saved && saved === password) {
         document.getElementById("usernameDisplay").innerText = `مرحبًا، ${username}`;
-      } else { alert("بيانات غير صحيحة"); }
+      } else alert("بيانات غير صحيحة");
+    }
+
+    document.getElementById("accountBtn").addEventListener("click", function () {
+      const username = document.getElementById("usernameDisplay").innerText.replace("مرحبًا، ", "").trim();
+      if (username) {
+        document.getElementById("accountName").innerText = username;
+        document.getElementById("accountPanel").style.display = "block";
+      }
+    });
+
+    function logoutUser() {
+      document.getElementById("usernameDisplay").innerText = "";
+      document.getElementById("accountPanel").style.display = "none";
+      document.getElementById("loginBtn").style.display = "inline-block";
     }
   </script>
 </body>
